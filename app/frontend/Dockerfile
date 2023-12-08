@@ -20,5 +20,5 @@ EXPOSE 3000
 # usado para definir o comando base 
 ENTRYPOINT [ "npm" ] 
 # usado para fornecer argumentos padrao para o comando a ser executado
-CMD [ "start" ]
+CMD [ "start", "run dev" ]
 # Dica: Leia a seção Docker e Docker-compose no README para mais informações
