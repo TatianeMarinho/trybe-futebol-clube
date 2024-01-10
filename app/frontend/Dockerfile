@@ -5,7 +5,7 @@ FROM node:16.14-alpine
 WORKDIR /app-frontend
 
 # Copiar os package.json e package-lock.json para o container
-COPY package*.json ./
+COPY *.json ./
 
 # Instalar as dependências Node
 RUN npm install
@@ -20,5 +20,5 @@ EXPOSE 3000
 # usado para definir o comando base 
 ENTRYPOINT [ "npm" ] 
 # usado para fornecer argumentos padrao para o comando a ser executado
-CMD [ "start", "run dev" ]
+CMD [ "start" ]
 # Dica: Leia a seção Docker e Docker-compose no README para mais informações
