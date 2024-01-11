@@ -6,7 +6,7 @@ const HTTP = {
   ok: 200,
   created: 201,
   noContent: 204,
-  invalidData: 400,
+  badRequest: 400,
   unauthorized: 401,
   notFound: 404,
   internalServerError: 500,

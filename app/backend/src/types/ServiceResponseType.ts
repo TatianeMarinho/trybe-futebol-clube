@@ -2,7 +2,7 @@ export type ServiceMessage = {
   message: string,
 };
 
-export type MessageErrorType = 'invalidData' | 'notFound' | 'internalServerError'
+export type MessageErrorType = 'badRequest' | 'notFound' | 'internalServerError'
 | 'unauthorized';
 
 export type MessageSucessType = 'created' | 'ok' | 'noContent';
@@ -17,4 +17,10 @@ export type ServiceSucessResponse<T> = {
   data: T
 };
 
-export type ServiceResponse<T> = ServiceErrorResponse | ServiceSucessResponse<T>;
+export type ServiceLoginSucess = {
+  status: MessageSucessType,
+  data: { token: string },
+};
+
+export type ServiceResponse<T> = ServiceErrorResponse
+| ServiceSucessResponse<T> | ServiceLoginSucess;

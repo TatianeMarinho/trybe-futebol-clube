@@ -1,7 +1,7 @@
-import IFindAll from '../Interfaces/IModels';
+import { IModelTeams } from '../Interfaces/IModels';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 
-export default class TeamsModel implements IFindAll<SequelizeTeam> {
+export default class TeamsModel implements IModelTeams<SequelizeTeam> {
   private _teamModel = SequelizeTeam;
 
   public async findAll(): Promise<SequelizeTeam[]> {
