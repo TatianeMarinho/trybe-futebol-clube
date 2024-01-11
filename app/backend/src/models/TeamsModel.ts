@@ -9,4 +9,10 @@ export default class TeamsModel implements IFindAll<SequelizeTeam> {
 
     return getList;
   }
+
+  public async findById(id: number): Promise<SequelizeTeam | null> {
+    const getTeam = await this._teamModel.findByPk(id);
+
+    return getTeam;
+  }
 }

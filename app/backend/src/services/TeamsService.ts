@@ -12,4 +12,11 @@ export default class TeamsService {
       return { status: 'internalServerError', data: { message: 'unknown error occurred' } };
     } return { status: 'ok', data: getAllTeams };
   }
+
+  public async findByid(id: number): Promise<ServiceResponse<ITeam | null>> {
+    const getOnTeam = await this._teamsModel.findById(id);
+    if (!getOnTeam) {
+      return { status: 'notFound', data: { message: 'team not found' } };
+    } return { status: 'ok', data: getOnTeam };
+  }
 }

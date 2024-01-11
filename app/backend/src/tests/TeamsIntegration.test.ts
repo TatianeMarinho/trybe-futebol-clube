@@ -9,7 +9,7 @@ import { app } from '../app';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 
 import { Response } from 'superagent';
-import { teamsMock } from './mocks/teamsMock';
+import { teamMockId, teamsMock } from './mocks/teamsMock';
 
 
 chai.use(chaiHttp);
@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Testando o endopoint /teams', () => {
-    after(() => sinon.restore());
+    afterEach(() => sinon.restore());
 
   it('retornando um array de times e ids', async () => {
     const response = await chai.request(app).get('/teams');
@@ -35,6 +35,28 @@ describe('Testando o endopoint /teams', () => {
     expect(response.body).to.be.an('array');
     expect(response).to.have.status(200);
     expect(response.body).to.deep.equal([{dataValues: teamsMock}]);
+
+  })
+
+  it('verificando endopoint /teams/:id com mock retorna um time especifico', async () => {
+    const id = 1;
+    sinon.stub(SequelizeTeam, 'findByPk').resolves([{ dataValues: teamMockId }] as any);
+
+    const response = await chai.request(app).get(`/teams/${id}`);
+
+    expect(response).to.have.status(200);
+    expect(response.body).to.deep.equal([{ dataValues: teamMockId }]);
+
+  })
+
+  it('verificando endopoint /teams/:id com mock retorna um time especifico', async () => {
+    const id = 35;
+    sinon.stub(SequelizeTeam, 'findByPk').resolves(null);
+
+    const response = await chai.request(app).get(`/teams/${id}`);
+
+    expect(response).to.have.status(404);
+    expect(response.body).to.deep.equal({ message: 'team not found' });
 
   })
 });
