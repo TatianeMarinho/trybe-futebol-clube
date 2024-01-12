@@ -19,6 +19,6 @@ export default class UsersService {
       const codeToken = token(data as Omit<SequelizeUser, 'password'>);
       return { status: 'ok', data: { token: codeToken } };
     }
-    return { status: 'unauthorized', data: { message: 'Unauthorized Login' } };
+    return { status: 'unauthorized', data: { message: 'Invalid email or password' } };
   }
 }

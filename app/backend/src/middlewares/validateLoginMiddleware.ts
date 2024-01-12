@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 
 function validateLoginMiddleware(req: Request, res: Response, next: NextFunction) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   const { email, password } = req.body;
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-  if (!emailRegex.test(email)) {
+  if (!email || !password) {
     return res.status(400).json({ message: 'All fields must be filled' });
   }
 
-  if (!password || password.length < 6) {
-    return res.status(400).json({ message: 'All fields must be filled' });
+  if (!emailRegex.test(email) || password.length < 6) {
+    return res.status(401).json({ message: 'Invalid email or password' });
   }
 
   next();
