@@ -8,4 +8,4 @@ export const userMock = {
 
 export const messageErrorLogin = { message: 'All fields must be filled' };
 
-export const messageInvalidLogin = { message: 'Unauthorized Login' };
+export const messageInvalidLogin = { message: 'Invalid email or password' };
