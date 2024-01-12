@@ -9,9 +9,10 @@ import { app } from '../app';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 
 import { Response } from 'superagent';
-import { teamMockId, teamsMock } from './mocks/teamsMock';
 import SequelizeUser from '../database/models/SequelizeUser';
 import { messageErrorLogin, messageInvalidLogin, userMock } from './mocks/usersMock';
+import { NextFunction, Request } from 'express';
+import validateLoginMiddleware from '../middlewares/validateLoginMiddleware';
 
 
 chai.use(chaiHttp);
@@ -30,7 +31,7 @@ describe('Testando o endopoint /login', () => {
         .send({
             email: 'admin@admin.com',
             password: 'secret_admin',
-          });
+        });
 
         expect(response.body).to.have.property('token');
         expect(response).to.have.status(200);
@@ -78,4 +79,20 @@ describe('Testando o endopoint /login', () => {
         expect(response.body).to.deep.equal(messageInvalidLogin);
         expect(response).to.have.status(401);
     })
+    
+    it('Erro ao realizar login com email invalido', async () => {
+        sinon.stub(SequelizeUser, 'findOne').resolves(null);
+
+        const response = await chai
+        .request(app)
+        .post('/login')
+        .send({
+            email: 'invalid@admin',
+            password: 'invalid_admin',
+        });
+
+        expect(response.body).to.deep.equal(messageInvalidLogin);
+        expect(response).to.have.status(401);
+    })
+
 })
