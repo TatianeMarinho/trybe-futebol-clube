@@ -2,7 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { ServiceResponse } from '../types/ServiceResponseType';
 import IUser from '../Interfaces/user/IUser';
 import UsersModel from '../models/UsersModel';
-import token from '../utils/Token';
+import jwtUtil from '../utils/Token';
 import SequelizeUser from '../database/models/SequelizeUser';
 
 export default class UsersService {
@@ -14,11 +14,15 @@ export default class UsersService {
     const user = await this._usersModel.findOneEmail(email);
 
     if (user && bcrypt.compareSync(password, user.dataValues.password)) {
-      const { password: s, ...data } = user.dataValues;
-
-      const codeToken = token(data as Omit<SequelizeUser, 'password'>);
+      const codeToken = jwtUtil.token(user as Omit<SequelizeUser, 'password'>);
       return { status: 'ok', data: { token: codeToken } };
     }
     return { status: 'unauthorized', data: { message: 'Invalid email or password' } };
+  }
+
+  public async UserRole(email: string): Promise<ServiceResponse<object>> {
+    const user = await this._usersModel.findOneEmail(email);
+
+    return { status: 'ok', data: { role: user?.dataValues.role } };
   }
 }
