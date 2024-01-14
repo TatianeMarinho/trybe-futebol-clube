@@ -1,0 +1,14 @@
+import { Request, Response } from 'express';
+import HttpStatus from '../utils/HttpStatus';
+import MatchesService from '../services/MatchesService';
+
+export default class MatchesController {
+  constructor(private _matchesService = new MatchesService()) {
+  }
+
+  public async getAllMatches(_req: Request, res: Response): Promise<Response> {
+    const { status, data } = await this._matchesService.findAll();
+
+    return res.status(HttpStatus(status)).json(data);
+  }
+}

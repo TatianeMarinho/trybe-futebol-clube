@@ -1,6 +1,7 @@
 import { CreationOptional,
   DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import db from '.';
+import SequelizeTeam from './SequelizeTeam';
 
 class SequelizeMatch extends
   Model<InferAttributes<SequelizeMatch>,
@@ -10,7 +11,7 @@ class SequelizeMatch extends
   declare homeTeamGoals: number;
   declare awayTeamId: number;
   declare awayTeamGoals: number;
-  declare inProgress: number;
+  declare inProgress: boolean;
 }
 
 SequelizeMatch.init(
@@ -49,5 +50,8 @@ SequelizeMatch.init(
     underscored: true,
   },
 );
+
+SequelizeMatch.belongsTo(SequelizeTeam, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+SequelizeMatch.belongsTo(SequelizeTeam, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
 export default SequelizeMatch;
