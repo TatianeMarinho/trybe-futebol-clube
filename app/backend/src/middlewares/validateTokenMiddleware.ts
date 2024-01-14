@@ -1,19 +1,25 @@
 import { NextFunction, Request, Response } from 'express';
-import jwtUtil, { TokenPayload } from '../utils/Token';
+import jwtUtil from '../utils/Token';
 
 async function validateTokenMiddleware(req:Request, res: Response, next: NextFunction) {
-  try {
-    const codeToken = req.headers.authorization;
+  const codeToken = req.headers.authorization;
 
-    if (codeToken) {
-      const decodedToken = jwtUtil.verify(codeToken) as TokenPayload;
-      req.body.user = decodedToken;
-      next();
-    }
-  } catch (err) {
-    console.error('Error during token validation', err);
+  if (!codeToken) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  const token = codeToken.split(' ')[1] || codeToken.split(' ')[0];
+  console.log(token);
+
+  const verifyToken = jwtUtil.verify(token);
+
+  if (verifyToken === 'Token must be a valid token') {
     return res.status(401).json({ message: 'Token must be a valid token' });
   }
+  console.log('middlewareReq', verifyToken);
+  req.body = verifyToken;
+
+  next();
 }
 
 export default validateTokenMiddleware;

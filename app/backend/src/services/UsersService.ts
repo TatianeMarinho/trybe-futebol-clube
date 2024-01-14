@@ -14,7 +14,9 @@ export default class UsersService {
     const user = await this._usersModel.findOneEmail(email);
 
     if (user && bcrypt.compareSync(password, user.dataValues.password)) {
-      const codeToken = jwtUtil.token(user as Omit<SequelizeUser, 'password'>);
+      const { password: p, ...data } = user.dataValues;
+
+      const codeToken = jwtUtil.token(data as Omit<SequelizeUser, 'password'>);
       return { status: 'ok', data: { token: codeToken } };
     }
     return { status: 'unauthorized', data: { message: 'Invalid email or password' } };
@@ -23,6 +25,8 @@ export default class UsersService {
   public async UserRole(email: string): Promise<ServiceResponse<object>> {
     const user = await this._usersModel.findOneEmail(email);
 
-    return { status: 'ok', data: { role: user?.dataValues.role } };
+    if (!user) return { status: 'notFound', data: { message: 'Not Found' } };
+
+    return { status: 'ok', data: { role: user.dataValues.role } };
   }
 }

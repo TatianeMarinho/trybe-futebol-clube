@@ -1,33 +1,27 @@
-import * as jwt from 'jsonwebtoken';
+import { verify, sign, Secret, SignOptions, JwtPayload } from 'jsonwebtoken';
 import SequelizeUser from '../database/models/SequelizeUser';
 
-const secret = process.env.JWT_SECRET || 'secretpassword';
+export default class jwtUtil {
+  static secret: Secret = process.env.JWT_SECRET || 'secretpassword';
 
-export type TokenPayload = {
-  id: number,
-  username: string,
-  email: string,
-  role: string,
-};
-
-const token = (user: Omit<SequelizeUser, 'password'>): string => {
-  const payload: TokenPayload = {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    role: user.role,
+  static jwtConfig: SignOptions = {
+    expiresIn: '1d',
+    algorithm: 'HS256',
   };
 
-  const newToken = jwt.sign(payload, secret);
-  return newToken;
-};
+  static token = (user: Omit<SequelizeUser, 'password'>): string => {
+    const newToken = sign(user, jwtUtil.secret, jwtUtil.jwtConfig);
+    return newToken;
+  };
 
-const verify = (codeToken: string): TokenPayload => {
-  const decoded = jwt.verify(codeToken, secret) as TokenPayload;
-  return decoded;
-};
-
-export default {
-  token,
-  verify,
-};
+  static verify = (codeToken: string): JwtPayload | string => {
+    try {
+      const decoded = verify(codeToken, jwtUtil.secret) as JwtPayload;
+      console.log(decoded);
+      return decoded;
+    } catch (err) {
+      console.log(err);
+      return 'erro';
+    }
+  };
+}
