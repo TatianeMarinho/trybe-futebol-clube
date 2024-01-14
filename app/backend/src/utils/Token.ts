@@ -17,11 +17,9 @@ export default class jwtUtil {
   static verify = (codeToken: string): JwtPayload | string => {
     try {
       const decoded = verify(codeToken, jwtUtil.secret) as JwtPayload;
-      console.log(decoded);
       return decoded;
     } catch (err) {
-      console.log(err);
-      return 'erro';
+      return 'Token must be a valid token';
     }
   };
 }
