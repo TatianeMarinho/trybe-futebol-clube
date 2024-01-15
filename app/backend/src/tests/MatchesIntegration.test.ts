@@ -86,13 +86,13 @@ describe('Testando o endopoint /matches', () => {
     })
 
 /*     it('Retornando a mensagem "Finished" ao finalizar uma partida em /matches/:id/finish', async () => {
-        sinon.stub(jwtUtil, 'verify').returns(userReturnVerify);
-        sinon.stub(MatchesModel.prototype, 'updateProgressId').resolves({ message: 'Finished' });
+        sinon.stub(jwtUtil, 'verify').resolves();
+        sinon.stub(SequelizeMatch, 'update').resolves();
 
         const response = await chai
         .request(app)
-        .patch('/matches/1/finish')
-        .set('Autorization', 'Bearer mocktoken');
+        .patch('/matches/47/finish')
+        .set('autorization', 'Bearer jiougtrsdewaewzaes');
 
         expect(response).to.have.status(200);
         expect(response.body).to.be.an('object');
