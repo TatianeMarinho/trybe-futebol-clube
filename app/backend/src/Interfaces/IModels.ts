@@ -17,7 +17,10 @@ export interface IUpdateProgressId<T> {
 export interface IFindAllProgress<T> {
   findAll(): Promise<T>
 }
+export interface IfindIdMatches {
+  updatedMatchesId(id: number, info: object): Promise<boolean | null>;
 
+}
 export interface IModelTeams<T> extends IFindAll<T>, IFindPk<T> {}
 
-export interface IModelMatches<T> extends IFindAll<T>, IUpdateProgressId<T> {}
+export interface IModelMatches<T> extends IFindAll<T>, IUpdateProgressId<T>, IfindIdMatches {}

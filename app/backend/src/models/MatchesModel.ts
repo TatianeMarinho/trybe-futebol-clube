@@ -35,4 +35,10 @@ export default class MatchesModel implements IModelMatches<SequelizeMatch> {
 
     return { message: 'Finished' };
   }
+
+  public async updatedMatchesId(id: number, info: object): Promise<boolean | null> {
+    const [updated] = await this._mathchModel.update(info, { where: { id } });
+
+    return updated > 0;
+  }
 }

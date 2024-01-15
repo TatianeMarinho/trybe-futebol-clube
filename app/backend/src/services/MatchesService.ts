@@ -28,4 +28,13 @@ export default class MatchesService {
 
     return { status: 'ok', data: finishedProgress };
   }
+
+  public async updatedMatchesId(id: number, info: object)
+    : Promise<ServiceResponse<{ message: string }>> {
+    const updated = await this._matchesModel.updatedMatchesId(id, info);
+
+    if (updated) {
+      return { status: 'ok', data: { message: 'Match updated successfully' } };
+    } return { status: 'internalServerError', data: { message: 'impossivel' } };
+  }
 }

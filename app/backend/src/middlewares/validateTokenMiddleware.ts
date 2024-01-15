@@ -17,7 +17,9 @@ async function validateTokenMiddleware(req:Request, res: Response, next: NextFun
     return res.status(401).json({ message: 'Token must be a valid token' });
   }
 
-  req.body = verifyToken;
+  if (req.method === 'GET') {
+    req.body = verifyToken;
+  }
 
   next();
 }

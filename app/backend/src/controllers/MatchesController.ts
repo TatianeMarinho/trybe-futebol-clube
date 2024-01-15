@@ -26,4 +26,12 @@ export default class MatchesController {
     const { status, data } = await this._matchesService.updateProgressId(Number(id));
     return res.status(HttpStatus(status)).json(data);
   }
+
+  public async patchUpdatedMatchesId(req:Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const info = req.body;
+
+    const { status, data } = await this._matchesService.updatedMatchesId(Number(id), info);
+    return res.status(HttpStatus(status)).json(data);
+  }
 }
