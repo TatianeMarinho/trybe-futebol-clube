@@ -10,9 +10,10 @@ import SequelizeTeam from '../database/models/SequelizeTeam';
 
 import { Response } from 'superagent';
 import SequelizeUser from '../database/models/SequelizeUser';
-import { messageErrorLogin, messageInvalidLogin, userMock } from './mocks/usersMock';
+import { messageErrorLogin, messageErrorValidateToken, messageInvalidLogin, userMock, userReturnVerify } from './mocks/usersMock';
 import { NextFunction, Request } from 'express';
 import validateLoginMiddleware from '../middlewares/validateLoginMiddleware';
+import jwtUtil from '../utils/Token';
 
 
 chai.use(chaiHttp);
@@ -95,4 +96,43 @@ describe('Testando o endopoint /login', () => {
         expect(response).to.have.status(401);
     })
 
+    it('Erro ao acessar o role do usuario em /login/role', async () => {
+
+        const response = await chai
+        .request(app)
+        .get('/login/role')
+        .set('Authorization', 'Bearer invalidtoken');
+
+        expect(response.body).to.have.property('message');
+        expect(response).to.have.status(401);
+    })
+
+    it('Erro quando o verify der erro', async () => {
+        sinon.stub(SequelizeUser, 'findOne').returns(null as any)
+        const response = await chai
+        .request(app)
+        .post('/login')
+        .send({
+            email: 'invalid@admin',
+            password: 'invalid_admin',
+        });
+        
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.have.property('message');
+        expect(response).to.have.status(401);
+    })
+
+    it('Acessando /login/role com sucesso', async () => {
+        sinon.stub(jwtUtil, 'verify').callsFake(() => (userReturnVerify));
+        sinon.stub(SequelizeUser, 'findOne').resolves({ dataValues: userMock } as any);
+
+        const response = await chai
+        .request(app)
+        .get('/login/role')
+        .set('Authorization', 'Bearer dajoidjfaksjdfoajdsfaoidsjfoids');
+
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.deep.equal({ role: 'admin'});
+        expect(response).to.have.status(200);
+    })
 })

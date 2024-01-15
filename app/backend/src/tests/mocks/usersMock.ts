@@ -6,6 +6,15 @@ export const userMock = {
       // senha: secret_admin
   }
 
+  export const userReturnVerify = {
+    id: 1,
+    username: 'Admin',
+    role: 'admin',
+    email: 'admin@admin.com',
+  }
+
 export const messageErrorLogin = { message: 'All fields must be filled' };
 
 export const messageInvalidLogin = { message: 'Invalid email or password' };
+
+export const messageErrorValidateToken = { message: 'Token must be a valid token' };
