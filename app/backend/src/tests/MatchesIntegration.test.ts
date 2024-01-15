@@ -11,7 +11,8 @@ import SequelizeTeam from '../database/models/SequelizeTeam';
 import { Response } from 'superagent';
 import { NextFunction, Request } from 'express';
 import SequelizeMatch from '../database/models/sequelizeMatch';
-import { matchesAllMock } from './mocks/matchesMock';
+import { matchesAllMock, matchesInProgressMock, matchesNoProgressMock } from './mocks/matchesMock';
+import MatchesModel from '../models/MatchesModel';
 
 
 chai.use(chaiHttp);
@@ -33,7 +34,7 @@ describe('Testando o endopoint /matches', () => {
         expect(response).to.have.status(200);
     })
 
-   it('Erro quando não retornar um array da consulta ao banco de dados', async () =>{
+    it('Erro quando não retornar um array da consulta ao banco de dados', async () => {
         sinon.stub(SequelizeMatch, 'findAll').resolves(null as any);
 
         const response = await chai
@@ -42,5 +43,43 @@ describe('Testando o endopoint /matches', () => {
 
         expect(response.body).to.have.property('message');
         expect(response).to.have.status(500);
+    })
+
+    it('Retornando uma lista de partidas em andamento com sucesso', async () => {
+        sinon.stub(MatchesModel.prototype, 'findAllProgress').resolves({ dataValues: matchesInProgressMock } as any);
+
+        const response = await chai
+        .request(app)
+        .get('/matches')
+        .query({ inProgress: 'true' });
+
+        expect(response.body).to.deep.equal({ dataValues: matchesInProgressMock });
+        expect(response.body).to.be.an('object');
+        expect(response).to.have.status(200);
+    })
+
+    it('Retornando uma lista de partidas finalizadas com sucesso', async () => {
+        sinon.stub(MatchesModel.prototype, 'findAllProgress').resolves({ dataValues: matchesNoProgressMock } as any);
+
+        const response = await chai
+        .request(app)
+        .get('/matches')
+        .query({ inProgress: 'false' });
+
+        expect(response.body).to.deep.equal({ dataValues: matchesNoProgressMock });
+        expect(response.body).to.be.an('object');
+        expect(response).to.have.status(200);
+    })
+
+    it('Erro quando o inProgress não é fornecido', async () => {
+        sinon.stub(SequelizeMatch, 'findAll').resolves({ dataValues: matchesAllMock } as any);
+
+        const response = await chai
+        .request(app)
+        .get('/matches');
+
+        expect(response.body).to.deep.equal({ dataValues: matchesAllMock });
+        expect(response.body).to.be.an('object');
+        expect(response).to.have.status(200);
     })
 })
