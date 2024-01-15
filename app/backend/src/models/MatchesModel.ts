@@ -15,4 +15,18 @@ export default class MatchesModel implements IFindAll<SequelizeMatch> {
 
     return getList;
   }
+
+  public async findAllProgress(inProgress: string): Promise<SequelizeMatch[]> {
+    const filterProgress = inProgress === 'false' ? { inProgress: false } : { inProgress: true };
+
+    const listFiltered = await this._mathchModel.findAll({
+      where: filterProgress,
+      include: [
+        { model: SequelizeTeam, as: 'homeTeam', attributes: ['teamName'] },
+        { model: SequelizeTeam, as: 'awayTeam', attributes: ['teamName'] },
+      ],
+    });
+
+    return listFiltered;
+  }
 }

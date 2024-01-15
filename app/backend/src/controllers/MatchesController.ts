@@ -11,4 +11,12 @@ export default class MatchesController {
 
     return res.status(HttpStatus(status)).json(data);
   }
+
+  public async getFilterProgress(req: Request, res: Response): Promise<Response> {
+    const { inProgress } = req.query;
+
+    const { status, data } = await this._matchesService.findAllProgress(inProgress as string);
+
+    return res.status(HttpStatus(status)).json(data);
+  }
 }
