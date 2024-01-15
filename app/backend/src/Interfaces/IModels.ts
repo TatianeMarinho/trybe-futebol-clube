@@ -10,4 +10,14 @@ export interface IFindOneEmail<T> {
   findOneEmail(email: string): Promise<T | null>;
 }
 
+export interface IUpdateProgressId<T> {
+  updateProgressId(id: number): Promise< object | T>;
+}
+
+export interface IFindAllProgress<T> {
+  findAll(): Promise<T>
+}
+
 export interface IModelTeams<T> extends IFindAll<T>, IFindPk<T> {}
+
+export interface IModelMatches<T> extends IFindAll<T>, IUpdateProgressId<T> {}

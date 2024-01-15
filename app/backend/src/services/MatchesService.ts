@@ -22,4 +22,10 @@ export default class MatchesService {
     const getAll = await this.findAll();
     return getAll;
   }
+
+  public async updateProgressId(id: number): Promise<ServiceResponse<object>> {
+    const finishedProgress = await this._matchesModel.updateProgressId(id);
+
+    return { status: 'ok', data: finishedProgress };
+  }
 }

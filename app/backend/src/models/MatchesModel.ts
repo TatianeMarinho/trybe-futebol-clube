@@ -1,8 +1,8 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/sequelizeMatch';
-import { IFindAll } from '../Interfaces/IModels';
+import { IModelMatches } from '../Interfaces/IModels';
 
-export default class MatchesModel implements IFindAll<SequelizeMatch> {
+export default class MatchesModel implements IModelMatches<SequelizeMatch> {
   private _mathchModel = SequelizeMatch;
 
   public async findAll(): Promise<SequelizeMatch[]> {
@@ -28,5 +28,11 @@ export default class MatchesModel implements IFindAll<SequelizeMatch> {
     });
 
     return listFiltered;
+  }
+
+  public async updateProgressId(id: number): Promise<object> {
+    await this._mathchModel.update({ inProgress: false }, { where: { id } });
+
+    return { message: 'Finished' };
   }
 }
