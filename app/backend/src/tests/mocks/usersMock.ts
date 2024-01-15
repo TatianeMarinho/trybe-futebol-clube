@@ -18,3 +18,5 @@ export const messageErrorLogin = { message: 'All fields must be filled' };
 export const messageInvalidLogin = { message: 'Invalid email or password' };
 
 export const messageErrorValidateToken = { message: 'Token must be a valid token' };
+
+export const messageErrorInterno = { message: 'Internal Server Error'};

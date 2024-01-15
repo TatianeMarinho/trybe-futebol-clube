@@ -1,3 +1,4 @@
+import { messageErrorInterno } from '../tests/mocks/usersMock';
 import IMatch from '../Interfaces/match/IMatch';
 import { ServiceResponse } from '../types/ServiceResponseType';
 import MatchesModel from '../models/MatchesModel';
@@ -10,7 +11,7 @@ export default class MatchesService {
     const getAllMatches = await this._matchesModel.findAll();
 
     if (!getAllMatches) {
-      return { status: 'internalServerError', data: { message: 'Internal Server Error' } };
+      return { status: 'internalServerError', data: messageErrorInterno };
     } return { status: 'ok', data: getAllMatches };
   }
 
@@ -35,6 +36,14 @@ export default class MatchesService {
 
     if (updated) {
       return { status: 'ok', data: { message: 'Match updated successfully' } };
-    } return { status: 'internalServerError', data: { message: 'impossivel' } };
+    } return { status: 'internalServerError', data: messageErrorInterno };
+  }
+
+  public async createMatches(matchInfo: IMatch): Promise<ServiceResponse<IMatch>> {
+    const newMatch = await this._matchesModel.createMatches(matchInfo);
+
+    if (newMatch) {
+      return { status: 'created', data: newMatch };
+    } return { status: 'internalServerError', data: messageErrorInterno };
   }
 }

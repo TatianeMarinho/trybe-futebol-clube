@@ -13,6 +13,8 @@ import { NextFunction, Request } from 'express';
 import SequelizeMatch from '../database/models/sequelizeMatch';
 import { matchesAllMock, matchesInProgressMock, matchesNoProgressMock } from './mocks/matchesMock';
 import MatchesModel from '../models/MatchesModel';
+import jwtUtil from '../utils/Token';
+import { userReturnVerify } from './mocks/usersMock';
 
 
 chai.use(chaiHttp);
@@ -82,4 +84,17 @@ describe('Testando o endopoint /matches', () => {
         expect(response.body).to.be.an('object');
         expect(response).to.have.status(200);
     })
+
+/*     it('Retornando a mensagem "Finished" ao finalizar uma partida em /matches/:id/finish', async () => {
+        sinon.stub(jwtUtil, 'verify').returns(userReturnVerify);
+        sinon.stub(MatchesModel.prototype, 'updateProgressId').resolves({ message: 'Finished' });
+
+        const response = await chai
+        .request(app)
+        .patch('/matches/1/finish')
+        .set('Autorization', 'Bearer mocktoken');
+
+        expect(response).to.have.status(200);
+        expect(response.body).to.be.an('object');
+    }) */
 })

@@ -20,7 +20,6 @@ async function validateTokenMiddleware(req:Request, res: Response, next: NextFun
   if (req.method === 'GET') {
     req.body = verifyToken;
   }
-
   next();
 }
 
