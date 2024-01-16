@@ -62,6 +62,15 @@ export default class LeaderboardModel implements IModelLeaderboard {
     return statistic;
   }
 
+  static totalPoints(victories: number, draws: number) {
+    return (victories * 3) + draws;
+  }
+
+  static efficiency(totalPoints: number, totalGames: number) {
+    const e = totalPoints / (totalGames * 3);
+    return (e * 100).toFixed(2);
+  }
+
   async homeLeaderboard(): Promise<ILeaderboard[]> {
     const { matches, teams } = await this.models();
 
@@ -72,10 +81,10 @@ export default class LeaderboardModel implements IModelLeaderboard {
       const goals = LeaderboardModel.goalsConcededScored(filterHome);
       // para calcular os placares do time da casa
       const gameScore = LeaderboardModel.matchesPlayed(filterHome);
-      const efficiency = ((gameScore.victories * 3) + gameScore.draws) / filterHome.length;
+      const totalPoints = LeaderboardModel.totalPoints(gameScore.victories, gameScore.draws);
 
       return { name: team.teamName,
-        totalPoints: (gameScore.victories * 3) + gameScore.draws,
+        totalPoints,
         totalGames: filterHome.length,
         totalVictories: gameScore.victories,
         totalDraws: gameScore.draws,
@@ -83,7 +92,7 @@ export default class LeaderboardModel implements IModelLeaderboard {
         goalsFavor: goals.scored,
         goalsOwn: goals.conceded,
         goalsBalance: goals.scored - goals.conceded,
-        efficiency: Number((efficiency * 100).toFixed(2)) };
+        efficiency: Number(LeaderboardModel.efficiency(totalPoints, filterHome.length)) };
     });
   }
 }
